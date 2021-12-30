@@ -10,4 +10,6 @@ My house has an issue with stratification in the summer, requiring us to leave a
 2. Activate the booster fan when the furnace fan runs.
 3. Monitor a temp sensor on the second floor and activate both the furnace and booster fan when the temperature differential exceeds a threshold. 
 
-This repostitory consists of the code for the controller which will run on a raspberry pi. Schematics / BOM  will be on a separate hackaday.io project when time permits. 
+~~This repostitory consists of the code for the controller which will run on a raspberry pi. Schematics / BOM  will be on a separate hackaday.io project when time permits.~~
+
+This project has been completed and I am in the process of documenting it. Overwhelming success. However, it was exceptionally difficult to get a proper PWM generated out of the raspberry pi and over time it just became more trouble than it was worth to stay with that platform. I've moved the effort to an Arduino which worked fine. I am still going to attempt to add some of the bells and whistles I wanted earlier but for now it works great. 
