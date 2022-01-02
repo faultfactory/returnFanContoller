@@ -10,9 +10,10 @@
 #define FANSPEED_INPUT_PIN 3
 #define SSR_OUT_PIN A5
 
+const int SD_CS = 4;
+const int WIZ_CS = 10;
+
 float fanSpeed;
-
-
 int fanCmdIdle = 70;
 int fanCmdPreBurst = 110; //Lower to gradually increase speed vs overshoot. 
 int fanCmdOn = 150;
@@ -31,6 +32,8 @@ volatile unsigned long edgeTime = 0;
 volatile unsigned long pulseCounter = 0;
 volatile bool newPulse = false;
 
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+byte myIp[] = { 192, 168 , 1 , 19 };
 
 enum HVACState
 {
