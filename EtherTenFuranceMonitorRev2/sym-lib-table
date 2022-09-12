@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name ProtoShieldShort-rescue)(type Legacy)(uri ${KIPRJMOD}/ProtoShieldShort-rescue.lib)(options "")(descr ""))
+  (lib (name 2020-02-24_01-42-38)(type Legacy)(uri ${KIPRJMOD}/2020-02-24_01-42-38/2020-02-24_01-42-38.lib)(options "")(descr ""))
+  (lib (name 2021-05-22_14-07-57)(type Legacy)(uri ${KIPRJMOD}/project_components/2021-05-22_14-07-57.lib)(options "")(descr ""))
+)

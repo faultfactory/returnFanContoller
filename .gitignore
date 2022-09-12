@@ -30,3 +30,4 @@
 *.exe
 *.out
 *.app
+InfluxDB_HVAC/src/InfluxConfig/conf.h

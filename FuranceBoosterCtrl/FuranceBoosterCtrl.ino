@@ -1,6 +1,7 @@
-#include "ArduinoSTL.h"
-#include <map>
-
+#define ETL_NO_STL
+#include <Arduino.h>
+#include <Embedded_Template_Library.h>
+#include <etl/flat_map.h>
 
 #define FAN_PWM_OUTPUT 5
 #define OPTO_PIN_HEAT 9
@@ -9,9 +10,8 @@
 #define OPTO_PIN_HUM 6
 #define FANSPEED_INPUT_PIN 3
 #define SSR_OUT_PIN A5
-
-const int SD_CS = 4;
-const int WIZ_CS = 10;
+#define SD_CS = 4;
+#define WIZ_CS = 10;
 
 float fanSpeed;
 int fanCmdIdle = 70;
@@ -24,7 +24,6 @@ int fanCommandPWM;
 unsigned long fanOnTime; 
 unsigned long fanOffTime; 
 const unsigned long burstLength = 10000;
-
 bool tempError = false;
 
 volatile unsigned long prevTime = 0;
@@ -32,7 +31,7 @@ volatile unsigned long edgeTime = 0;
 volatile unsigned long pulseCounter = 0;
 volatile bool newPulse = false;
 
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };    
 byte myIp[] = { 192, 168 , 1 , 19 };
 
 enum HVACState
@@ -50,26 +49,10 @@ enum HVACSignal
    HUMIDIFY
 };
 
-std::map<HVACSignal,bool> activeMap{
-   {FURNACE_FAN,true},
-   {HEAT,true},
-   {COOL,true},
-   {HUMIDIFY,false}
-};
+etl::flat_map<HVACSignal,HVACState,4> stateMap;
+etl::flat_map<HVACSignal,bool,4> activeMap;
+etl::flat_map<HVACSignal,int,4> pinMap;
 
-std::map<HVACSignal,int> pinMap {
-   {FURNACE_FAN,OPTO_PIN_FAN},
-   {HEAT,OPTO_PIN_HEAT},
-   {COOL,OPTO_PIN_COOL},
-   {HUMIDIFY,OPTO_PIN_HUM}
-};
-
-std::map<HVACSignal,HVACState> stateMap{
-   {FURNACE_FAN,UNKNOWN},
-   {HEAT,UNKNOWN},
-   {COOL,UNKNOWN},
-   {HUMIDIFY,UNKNOWN}
-};
 
 
 HVACState getHVACState(HVACSignal signal)
@@ -85,7 +68,6 @@ HVACState getHVACState(HVACSignal signal)
        {
            return SIGNAL_LOW;
        }
-
        return UNKNOWN;
    }
    else
@@ -102,8 +84,6 @@ void updateHVACStates()
     sig.second = getHVACState(sig.first);
   }
 }
-
-
 
 void updateFanSpeed()
 {
@@ -222,6 +202,22 @@ void setup()
   // Attach interrupt to pin for measuring Fanspeed
   pinMode(FANSPEED_INPUT_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(FANSPEED_INPUT_PIN), ISR1, FALLING);
+
+  
+   stateMap.insert(etl::pair<HVACSignal,HVACState>{FURNACE_FAN,UNKNOWN});
+   stateMap.insert(etl::pair<HVACSignal,HVACState>{HEAT,UNKNOWN});
+   stateMap.insert(etl::pair<HVACSignal,HVACState>{COOL,UNKNOWN});
+   stateMap.insert(etl::pair<HVACSignal,HVACState>{OVERRIDE,UNKNOWN});
+   
+   activeMap.insert(etl::pair<HVACSignal,bool>{FURNACE_FAN,true});
+   activeMap.insert(etl::pair<HVACSignal,bool>{HEAT,true});
+   activeMap.insert(etl::pair<HVACSignal,bool>{COOL,true});
+   activeMap.insert(etl::pair<HVACSignal,bool>{OVERRIDE,false});
+
+   pinMap.insert(etl::pair<HVACSignal,int>{FURNACE_FAN,OPTO_PIN_FAN});
+   pinMap.insert(etl::pair<HVACSignal,int>{HEAT,OPTO_PIN_HEAT});
+   pinMap.insert(etl::pair<HVACSignal,int>{COOL,OPTO_PIN_COOL});
+   pinMap.insert(etl::pair<HVACSignal,int>{OVERRIDE,OPTO_PIN_HUM});
   
 }
 
